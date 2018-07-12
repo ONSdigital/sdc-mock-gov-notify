@@ -10,6 +10,11 @@ flask = "*"
 behave = "*"
 pytest = "*"
 requests = "*"
+notifications-python-client = "*"
+flask-test = "*"
+pycodestyle = "*"
+nose = "*"
+"autopep8" = "*"
 
 [requires]
 python_version = "3.6"
