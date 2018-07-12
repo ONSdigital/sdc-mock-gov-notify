@@ -1,0 +1,5 @@
+---
+applications:
+- name: gov-notify-mock
+  instances: 1
+  memory: 512M
