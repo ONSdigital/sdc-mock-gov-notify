@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 import json
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ def send_email():
     data = json.loads(request.data)
 
     emails.append(data)
-    return 'OK', 200
+    return Response(response="{}", status=200, mimetype="application/json")
 
 
 @app.route('/inbox/emails', methods=['GET'])
