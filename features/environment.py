@@ -10,11 +10,11 @@ from sdc_mock_gov_notify import app
 def before_feature(context, _step):
     port = os.getenv("PORT", 3001)
     host = 'localhost'
-    command = 'pipenv run gunicorn' \
-              f'-b {host}:{port}' \
-              '--workers 1' \
-              '--timeout 60' \
-              'sdc_mock_gov_notify:app'
+    command = 'pipenv run gunicorn ' \
+              f'-b {host}:{port} ' \
+              '--workers 1 ' \
+              '--timeout 60 ' \
+              'sdc_mock_gov_notify:app '
     context.app_url = f'http://{host}:{port}'
 
     print(f'Starting server with command {command}')
