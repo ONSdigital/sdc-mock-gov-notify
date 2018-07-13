@@ -1,3 +1,5 @@
+import uuid
+
 from flask import Flask, request, Response
 import json
 
@@ -11,7 +13,16 @@ def send_email():
     data = json.loads(request.data)
 
     emails.append(data)
-    return Response(response="{}", status=200, mimetype="application/json")
+
+    response = {'notificationId': str(uuid.uuid4()),
+                'reference': data['reference'],
+                'templateVersion': 1,
+                'templateId': data['template_id'],
+                'templateUri': f'https://api.notifications.service.gov.uk/templates/{data["template_id"]}',
+                'body': json.dumps(data),
+                'subject': 'An example subject'
+                }
+    return Response(response=json.dumps(response), status=200, mimetype='application/json')
 
 
 @app.route('/inbox/emails', methods=['GET'])
