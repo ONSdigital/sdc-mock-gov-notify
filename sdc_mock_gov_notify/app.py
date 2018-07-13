@@ -6,7 +6,7 @@ app = Flask(__name__)
 emails = []
 
 
-@app.route('/gov_notify_api/v2/notifications/email', methods=['POST'])
+@app.route('/v2/notifications/email', methods=['POST'])
 def send_email():
     data = json.loads(request.data)
 

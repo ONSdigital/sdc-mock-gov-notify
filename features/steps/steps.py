@@ -2,19 +2,22 @@ from behave import *
 
 import requests
 from nose.tools import assert_equals
+from notifications_python_client import NotificationsAPIClient
 
 
 @given(u'an email is sent to Gov Notify to "{email_address}"')
 def send_email_to_gov_notify(context, email_address):
+    service_id = 'S' * 32
+    api_id = 'A' * 32
+    api_key = api_id + service_id
 
-    response = requests.post(
-        f'{context.app_url}/gov_notify_api/v2/notifications/email',
-        json={'email_address': email_address,
-              'template_id': 'this-is-a-uuid',
-              'personalisation': {'name': 'Tom'},
-              'reference': 'example-reference'})
+    client = NotificationsAPIClient(api_key, base_url=f'{context.app_url}')
 
-    assert_equals(200, response.status_code)
+    client.send_email_notification(
+        email_address=email_address,
+        template_id='this-is-a-uuid',
+        personalisation={'name': 'Tom'},
+        reference='example-reference')
 
 
 @when(u'I check the email inbox')
