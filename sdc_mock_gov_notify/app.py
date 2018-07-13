@@ -14,15 +14,19 @@ def send_email():
 
     emails.append(data)
 
+    template_id = 'https://api.notifications.service.gov.uk/templates/' + \
+                  data["template_id"]
+
     response = {'notificationId': str(uuid.uuid4()),
                 'reference': data['reference'],
                 'templateVersion': 1,
                 'templateId': data['template_id'],
-                'templateUri': f'https://api.notifications.service.gov.uk/templates/{data["template_id"]}',
+                'templateUri': template_id,
                 'body': json.dumps(data),
                 'subject': 'An example subject'
                 }
-    return Response(response=json.dumps(response), status=200, mimetype='application/json')
+    return Response(response=json.dumps(response),
+                    status=200, mimetype='application/json')
 
 
 @app.route('/inbox/emails', methods=['GET'])

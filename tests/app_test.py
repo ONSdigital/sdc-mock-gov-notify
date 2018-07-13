@@ -43,26 +43,42 @@ class AppTest(unittest.TestCase):
         self.assertEqual('another-reference', response['reference'])
 
     def test_send_email_returns_the_provided_template_id(self):
-        response = self._send_email_request({'template_id': '56f9c46c-4672-4cf7-80bf-1f9265e42fba'})
-        self.assertEqual('56f9c46c-4672-4cf7-80bf-1f9265e42fba', response['templateId'])
+        override = {'template_id': '56f9c46c-4672-4cf7-80bf-1f9265e42fba'}
+        response = self._send_email_request(override)
+        self.assertEqual(
+            '56f9c46c-4672-4cf7-80bf-1f9265e42fba',
+            response['templateId'])
 
-        response = self._send_email_request({'template_id': '92276bc9-1b88-42ff-8a0a-8a0bcdaf43e7'})
-        self.assertEqual('92276bc9-1b88-42ff-8a0a-8a0bcdaf43e7', response['templateId'])
+        override = {'template_id': '92276bc9-1b88-42ff-8a0a-8a0bcdaf43e7'}
+        response = self._send_email_request(override)
+        self.assertEqual(
+            '92276bc9-1b88-42ff-8a0a-8a0bcdaf43e7',
+            response['templateId'])
 
     def test_send_email_returns_notificationId_as_a_UUID(self):
         response = self._send_email_request()
         self.assertUUID(response['notificationId'])
 
-    def test_send_email_returns_a_template_URI_containing_the_template_id(self):
-        response = self._send_email_request({'template_id': '915ceb17-de9b-466c-beeb-25c9e49a1aa4'})
-        self.assertEqual('https://api.notifications.service.gov.uk/templates/915ceb17-de9b-466c-beeb-25c9e49a1aa4', response['templateUri'])
+    def test_send_email_returns_a_template_URI_with_template_id(self):
+        override = {'template_id': '915ceb17-de9b-466c-beeb-25c9e49a1aa4'}
+        response = self._send_email_request(override)
+        self.assertEqual(
+            'https://api.notifications.service.gov.uk/templates/'
+            '915ceb17-de9b-466c-beeb-25c9e49a1aa4',
+            response['templateUri'])
 
-        response = self._send_email_request({'template_id': 'd92c7ae3-d9c9-454d-8401-cf6bb4c35581'})
-        self.assertEqual('https://api.notifications.service.gov.uk/templates/d92c7ae3-d9c9-454d-8401-cf6bb4c35581', response['templateUri'])
+        override = {'template_id': 'd92c7ae3-d9c9-454d-8401-cf6bb4c35581'}
+        response = self._send_email_request(override)
+        self.assertEqual(
+            'https://api.notifications.service.gov.uk/templates/'
+            'd92c7ae3-d9c9-454d-8401-cf6bb4c35581',
+            response['templateUri'])
 
-    def test_send_email_returns_the_response_containing_the_requested_JSON(self):
+    def test_send_email_returns_the_body_containing_the_requested_JSON(self):
         response = self._send_email_request()
-        self.assertEqual(self.VALID_SEND_EMAIL_REQUEST, json.loads(response['body']))
+        self.assertEqual(
+            self.VALID_SEND_EMAIL_REQUEST,
+            json.loads(response['body']))
 
     def test_send_email_returns_a_static_subject(self):
         response = self._send_email_request()

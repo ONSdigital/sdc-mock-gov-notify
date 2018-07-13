@@ -10,7 +10,11 @@ from sdc_mock_gov_notify import app
 def before_feature(context, _step):
     port = os.getenv("PORT", 3001)
     host = 'localhost'
-    command = f'pipenv run gunicorn -b {host}:{port} --workers 1 --timeout 60 sdc_mock_gov_notify:app'
+    command = 'pipenv run gunicorn' \
+              f'-b {host}:{port}' \
+              '--workers 1' \
+              '--timeout 60' \
+              'sdc_mock_gov_notify:app'
     context.app_url = f'http://{host}:{port}'
 
     print(f'Starting server with command {command}')
@@ -35,7 +39,7 @@ def _wait_for_server(test_url, retries):
             else:
                 print('retrying')
 
-        except:
+        except BaseException:
             print(f'retrying...')
             sleep(1)
             retries -= 1
