@@ -98,9 +98,42 @@ class AppTest(unittest.TestCase):
         response = self._send_email_request()
         self.assertEqual('An example subject', response['content']['subject'])
 
+    def test_get_emails_returns_a_200_status_code(self):
+        response = self.app.get('/inbox/emails')
+        self.assertEqual(200, response.status_code)
+
+    def test_get_emails_returns_an_empty_list_if_there_are_no_email(self):
+        response = self.app.get('/inbox/emails')
+        self.assertEqual([], json.loads(response.data))
+
+    def test_get_emails_returns_the_sent_emails(self):
+        self._send_email_request({'reference': 'email1'})
+        self._send_email_request({'reference': 'email2'})
+
+        response = self.app.get('/inbox/emails')
+        self.assertEqual([self._valid_email_request_with({'reference': 'email1'}),
+                          self._valid_email_request_with({'reference': 'email2'})],
+                         json.loads(response.data))
+
+    def test_delete_emails_returns_a_200_status_code(self):
+        response = self.app.delete('/inbox/emails')
+        self.assertEqual(200, response.status_code)
+
+    def test_delete_emails_returns_a_success_response(self):
+        response = self.app.delete('/inbox/emails')
+        self.assertEqual({'success': True}, json.loads(response.data))
+
+    def test_delete_clears_the_inbox(self):
+        self._send_email_request({'reference': 'email1'})
+        self._send_email_request({'reference': 'email2'})
+
+        self.app.delete('/inbox/emails')
+
+        response = self.app.get('/inbox/emails')
+        self.assertEqual([], json.loads(response.data))
+
     def _send_email_request(self, override={}):
-        data = self.VALID_SEND_EMAIL_REQUEST.copy()
-        data.update(override)
+        data = self._valid_email_request_with(override)
 
         response = self.app.post(
             '/v2/notifications/email',
@@ -108,3 +141,8 @@ class AppTest(unittest.TestCase):
             content_type='application/json')
         body = json.loads(response.data)
         return body
+
+    def _valid_email_request_with(self, override={}):
+        data = self.VALID_SEND_EMAIL_REQUEST.copy()
+        data.update(override)
+        return data

@@ -40,4 +40,4 @@ def get_emails():
 @app.route('/inbox/emails', methods=['DELETE'])
 def clear_emails():
     emails.clear()
-    return 'OK', 200
+    return json.dumps({'success': True}), 200
