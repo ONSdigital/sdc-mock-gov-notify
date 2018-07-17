@@ -25,7 +25,7 @@ class AppTest(unittest.TestCase):
             data=json.dumps(self.VALID_SEND_EMAIL_REQUEST),
             content_type='application/json')
 
-        self.assertEqual(200, response.status_code)
+        self.assertEqual(201, response.status_code)
 
     def test_send_email_returns_a_valid_JSON_object(self):
         response = self._send_email_request()

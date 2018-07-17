@@ -26,7 +26,7 @@ def send_email():
                 'subject': 'An example subject'
                 }
     return Response(response=json.dumps(response),
-                    status=200, mimetype='application/json')
+                    status=201, mimetype='application/json')
 
 
 @app.route('/inbox/emails', methods=['GET'])
