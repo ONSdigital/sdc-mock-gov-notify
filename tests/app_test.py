@@ -31,9 +31,23 @@ class AppTest(unittest.TestCase):
         response = self._send_email_request()
         self.assertIsInstance(response, dict)
 
-    def test_send_email_returns_templateVersion_of_1(self):
+    def test_send_email_returns_notification_id_as_a_UUID(self):
         response = self._send_email_request()
-        self.assertEqual(1, response['templateVersion'])
+        self.assertUUID(response['id'])
+
+    def test_send_email_returns_unique_notification_ids(self):
+        uuid1 = self._send_email_request()['id']
+        uuid2 = self._send_email_request()['id']
+
+        self.assertNotEqual(uuid1, uuid2)
+
+    def test_send_email_returns_a_template_dict(self):
+        response = self._send_email_request()
+        self.assertIsInstance(response['template'], dict)
+
+    def test_send_email_returns_template_version_of_1(self):
+        response = self._send_email_request()
+        self.assertEqual(1, response['template']['version'])
 
     def test_send_email_returns_the_provided_reference(self):
         response = self._send_email_request({'reference': 'this-reference'})
@@ -47,17 +61,13 @@ class AppTest(unittest.TestCase):
         response = self._send_email_request(override)
         self.assertEqual(
             '56f9c46c-4672-4cf7-80bf-1f9265e42fba',
-            response['templateId'])
+            response['template']['id'])
 
         override = {'template_id': '92276bc9-1b88-42ff-8a0a-8a0bcdaf43e7'}
         response = self._send_email_request(override)
         self.assertEqual(
             '92276bc9-1b88-42ff-8a0a-8a0bcdaf43e7',
-            response['templateId'])
-
-    def test_send_email_returns_notificationId_as_a_UUID(self):
-        response = self._send_email_request()
-        self.assertUUID(response['notificationId'])
+            response['template']['id'])
 
     def test_send_email_returns_a_template_URI_with_template_id(self):
         override = {'template_id': '915ceb17-de9b-466c-beeb-25c9e49a1aa4'}
@@ -65,30 +75,28 @@ class AppTest(unittest.TestCase):
         self.assertEqual(
             'https://api.notifications.service.gov.uk/templates/'
             '915ceb17-de9b-466c-beeb-25c9e49a1aa4',
-            response['templateUri'])
+            response['template']['uri'])
 
         override = {'template_id': 'd92c7ae3-d9c9-454d-8401-cf6bb4c35581'}
         response = self._send_email_request(override)
         self.assertEqual(
             'https://api.notifications.service.gov.uk/templates/'
             'd92c7ae3-d9c9-454d-8401-cf6bb4c35581',
-            response['templateUri'])
+            response['template']['uri'])
+
+    def test_send_email_returns_a_content_dict(self):
+        response = self._send_email_request()
+        self.assertIsInstance(response['content'], dict)
 
     def test_send_email_returns_the_body_containing_the_requested_JSON(self):
         response = self._send_email_request()
         self.assertEqual(
             self.VALID_SEND_EMAIL_REQUEST,
-            json.loads(response['body']))
+            json.loads(response['content']['body']))
 
     def test_send_email_returns_a_static_subject(self):
         response = self._send_email_request()
-        self.assertEqual('An example subject', response['subject'])
-
-    def test_send_email_returns_unique_notification_ids(self):
-        uuid1 = self._send_email_request()['notificationId']
-        uuid2 = self._send_email_request()['notificationId']
-
-        self.assertNotEqual(uuid1, uuid2)
+        self.assertEqual('An example subject', response['content']['subject'])
 
     def _send_email_request(self, override={}):
         data = self.VALID_SEND_EMAIL_REQUEST.copy()

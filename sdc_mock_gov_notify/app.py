@@ -17,14 +17,17 @@ def send_email():
     template_id = 'https://api.notifications.service.gov.uk/templates/' + \
                   data["template_id"]
 
-    response = {'notificationId': str(uuid.uuid4()),
+    response = {'id': str(uuid.uuid4()),
                 'reference': data['reference'],
-                'templateVersion': 1,
-                'templateId': data['template_id'],
-                'templateUri': template_id,
-                'body': json.dumps(data),
-                'subject': 'An example subject'
+                'template': {
+                    'version': 1,
+                    'id': data['template_id'],
+                    'uri': template_id},
+                'content': {
+                    'body': json.dumps(data),
+                    'subject': 'An example subject'}
                 }
+
     return Response(response=json.dumps(response),
                     status=201, mimetype='application/json')
 
