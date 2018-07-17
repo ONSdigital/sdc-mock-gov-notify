@@ -10,7 +10,7 @@ codestyle:
 	pipenv run pycodestyle .
 
 unit:
-	pipenv run python -m pytest
+	pipenv run python -m pytest --cov=sdc_mock_gov_notify --cov-report xml
 
 behave:
 	pipenv run behave
