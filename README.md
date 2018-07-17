@@ -12,7 +12,7 @@ require email verification.
 ### GOV.UK Notify Endpoints
 
 #### `POST /gov_notify_api/v2/notifications/email`
-This end point receives _send email_ requests for the official GOV.UK Notify API
+This endpoint receives _send email_ requests for the official GOV.UK Notify API
 packages and adds them to the email inbox.
 
 ### Programatic Endpoints
