@@ -16,6 +16,8 @@ flask-test = "*"
 pycodestyle = "*"
 nose = "*"
 "autopep8" = "*"
+codecov = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.6"

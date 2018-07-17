@@ -1,5 +1,7 @@
 # SDC Mock GOV.UK Notify
 
+[![Build Status](https://travis-ci.org/ONSdigital/sdc-mock-gov-notify.svg?branch=master)](https://travis-ci.org/ONSdigital/sdc-mock-gov-notify)
+
 ## Motivation
 
 This service has been built to enable the testing of user journeys which
