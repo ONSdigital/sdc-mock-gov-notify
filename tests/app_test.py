@@ -111,9 +111,10 @@ class AppTest(unittest.TestCase):
         self._send_email_request({'reference': 'email2'})
 
         response = self.app.get('/inbox/emails')
-        self.assertEqual([self._valid_email_request_with({'reference': 'email1'}),
-                          self._valid_email_request_with({'reference': 'email2'})],
-                         json.loads(response.data))
+
+        request1 = self._valid_email_request_with({'reference': 'email1'})
+        request2 = self._valid_email_request_with({'reference': 'email2'})
+        self.assertEqual([request1, request2], json.loads(response.data))
 
     def test_delete_emails_returns_a_200_status_code(self):
         response = self.app.delete('/inbox/emails')

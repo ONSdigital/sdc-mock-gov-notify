@@ -6,6 +6,9 @@ help:
 install-dev-deps:
 	pipenv install --dev
 
+fix-codestyle:
+	pipenv run autopep8 -i -r .
+
 codestyle:
 	pipenv run pycodestyle .
 
