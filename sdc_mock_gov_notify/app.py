@@ -37,6 +37,12 @@ def get_emails():
     return json.dumps(emails), 200
 
 
+@app.route('/inbox/emails/<email_address>', methods=['GET'])
+def get_emails_for(email_address):
+    messages = [m for m in emails if m['email_address'] == email_address]
+    return json.dumps(messages), 200
+
+
 @app.route('/inbox/emails', methods=['DELETE'])
 def clear_emails():
     emails.clear()

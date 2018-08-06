@@ -28,6 +28,10 @@ def after_feature(context, _scenario):
     context.process.terminate()
 
 
+def after_scenario(context, _):
+    requests.delete(f'{context.app_url}/inbox/emails')
+
+
 def _wait_for_server(test_url, retries):
     print('Waiting for server to start')
     started = False

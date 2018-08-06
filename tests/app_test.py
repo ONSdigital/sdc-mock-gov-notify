@@ -16,7 +16,11 @@ class AppTest(unittest.TestCase):
         app.testing = True
         self.app = app.test_client()
 
-    def assertUUID(self, string):
+    def tearDown(self):
+        self.app.delete('/inbox/emails')
+
+    @staticmethod
+    def assertUUID(string):
         UUID(string)
 
     def test_send_email_returns_a_200_status_code(self):
@@ -115,6 +119,25 @@ class AppTest(unittest.TestCase):
         request1 = self._valid_email_request_with({'reference': 'email1'})
         request2 = self._valid_email_request_with({'reference': 'email2'})
         self.assertEqual([request1, request2], json.loads(response.data))
+
+    def test_get_emails_for_returns_a_200_status_code(self):
+        response = self.app.get('/inbox/emails/tom%40example.com')
+        self.assertEqual(200, response.status_code)
+
+    def test_get_emails_for_returns_an_empty_list_if_there_are_no_email(self):
+        response = self.app.get('/inbox/emails/tom%40example.com')
+        self.assertEqual([], json.loads(response.data))
+
+    def test_get_emails_for_returns_the_emails_for_the_given_address(self):
+        email1 = {'reference': 'email1', 'email_address': 'tom@example.com'}
+        email2 = {'reference': 'email2', 'email_address': 'matt@example.com'}
+        self._send_email_request(email1)
+        self._send_email_request(email2)
+
+        response = self.app.get('/inbox/emails/tom%40example.com')
+
+        request1 = self._valid_email_request_with(email1)
+        self.assertEqual([request1], json.loads(response.data))
 
     def test_delete_emails_returns_a_200_status_code(self):
         response = self.app.delete('/inbox/emails')
